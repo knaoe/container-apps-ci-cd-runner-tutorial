@@ -4,9 +4,40 @@ FROM ghcr.io/actions/actions-runner:2.304.0
 USER root
 
 # install curl and jq
-RUN apt-get update && apt-get install -y curl jq xz-utils && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+    # basics
+    curl \
+    wget \
+    jq \
+    git \
+    git-lfs \
+    ca-certificates \
+    gnupg \
+    lsb-release \
+    # compression
+    zip \
+    unzip \
+    tar \
+    gzip \
+    xz-utils \
+    zstd \
+    # build
+    build-essential \
+    make \
+    gcc \
+    g++ \
+    # network
+    openssh-client \
+    rsync \
+    # util
+    sudo \
+    software-properties-common \
+    apt-transport-https \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN chown -R runner:runner /home/runner && \
+    chmod -R 755 /home/runner
 
 COPY github-actions-runner/entrypoint.sh ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh
